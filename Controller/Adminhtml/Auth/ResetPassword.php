@@ -1,16 +1,12 @@
 <?php
 /**
+ *
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Magento\User\Controller\Adminhtml\Auth;
 
-use Magento\Framework\App\Action\HttpGetActionInterface;
-
-/**
- * Controller for admin user password reset form
- */
-class ResetPassword extends \Magento\User\Controller\Adminhtml\Auth implements HttpGetActionInterface
+class ResetPassword extends \Magento\User\Controller\Adminhtml\Auth
 {
     /**
      * Display reset forgotten password form
@@ -25,12 +21,6 @@ class ResetPassword extends \Magento\User\Controller\Adminhtml\Auth implements H
         $userId = (int)$this->getRequest()->getQuery('id');
         try {
             $this->_validateResetPasswordLinkToken($userId, $passwordResetToken);
-
-            // Extend token validity to avoid expiration while this form is
-            // being completed by the user.
-            $user = $this->_userFactory->create()->load($userId);
-            $user->changeResetPasswordLinkToken($passwordResetToken);
-            $user->save();
 
             $this->_view->loadLayout();
 

@@ -93,7 +93,7 @@ class DeleteTest extends TestCase
     private $messageManagerMock;
 
     /**
-     * @var Role|MockObject
+     * @var \Magento\Authorization\Model\Role|MockObject
      */
     private $roleModelMock;
 
@@ -171,7 +171,7 @@ class DeleteTest extends TestCase
                 'userFactory' => $this->userFactoryMock,
                 'rulesFactory' => $this->rulesFactoryMock,
                 'authSession' => $this->authSessionMock,
-                'filterManager' => $this->filterManagerMock
+                'filterManager' => $this->filterManagerMock,
             ]
         );
     }
@@ -181,7 +181,7 @@ class DeleteTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteDeleteSelfAssignedRole(): void
+    public function testExecuteDeleteSelfAssignedRole()
     {
         $idUser = 1;
         $idUserRole = 3;
@@ -207,7 +207,7 @@ class DeleteTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteDeleteWithNormalScenario(): void
+    public function testExecuteDeleteWithNormalScenario()
     {
         $idUser = 1;
         $idUserRole = 3;
@@ -239,7 +239,7 @@ class DeleteTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteDeleteWithError(): void
+    public function testExecuteDeleteWithError()
     {
         $idUser = 1;
         $idUserRole = 3;
@@ -271,7 +271,7 @@ class DeleteTest extends TestCase
      *
      * @return void
      */
-    public function testExecuteWithoutRole(): void
+    public function testExecuteWithoutRole()
     {
         $idUser = 1;
         $idUserRole = 3;
@@ -281,9 +281,8 @@ class DeleteTest extends TestCase
         $this->checkUserAndRoleIds($idDeleteRole, $idUser, $idUserRole);
 
         $this->initRoleExecute($roleType);
-        $this->roleModelMock
-            ->method('getId')
-            ->willReturnOnConsecutiveCalls($idDeleteRole, null);
+        $this->roleModelMock->expects($this->at(1))->method('getId')->willReturn($idDeleteRole);
+        $this->roleModelMock->expects($this->at(2))->method('getId')->willReturn(null);
 
         $this->messageManagerMock->expects($this->once())
             ->method('addError')
@@ -304,10 +303,9 @@ class DeleteTest extends TestCase
      * @param int $id
      * @param int $userId
      * @param int $userRoleId
-     *
      * @return void
      */
-    private function checkUserAndRoleIds(int $id, int $userId, int $userRoleId): void
+    private function checkUserAndRoleIds(int $id, int $userId, int $userRoleId)
     {
         $this->requestMock->expects($this->atLeastOnce())->method('getParam')->with('rid')->willReturn($id);
 
@@ -325,10 +323,9 @@ class DeleteTest extends TestCase
      * Execute initialization Role.
      *
      * @param string|null $roleType
-     *
      * @return void
      */
-    private function initRoleExecute(?string $roleType): void
+    private function initRoleExecute($roleType)
     {
         $this->roleFactoryMock->expects($this->once())->method('create')->willReturn($this->roleModelMock);
         $this->roleModelMock->expects($this->once())->method('load')->willReturnSelf();

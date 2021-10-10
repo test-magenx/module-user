@@ -32,95 +32,82 @@ use PHPUnit\Framework\TestCase;
  */
 class UserTest extends TestCase
 {
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $model;
 
-    /**
-     * @var Data|MockObject
-     */
+    /** @var Data|MockObject */
     protected $backendHelperMock;
 
-    /**
-     * @var EncoderInterface|MockObject
-     */
+    /** @var EncoderInterface|MockObject */
     protected $jsonEncoderMock;
 
-    /**
-     * @var Registry|MockObject
-     */
+    /** @var Registry|MockObject */
     protected $registryMock;
 
-    /**
-     * @var RoleFactory|MockObject
-     */
+    /** @var RoleFactory|MockObject */
     protected $roleFactoryMock;
 
-    /**
-     * @var CollectionFactory|MockObject
-     */
+    /** @var CollectionFactory|MockObject */
     protected $userRolesFactoryMock;
 
-    /**
-     * @var RequestInterface|MockObject
-     */
+    /** @var RequestInterface|MockObject */
     protected $requestInterfaceMock;
 
-    /**
-     * @var UrlInterface|MockObject
-     */
+    /** @var UrlInterface|MockObject */
     protected $urlInterfaceMock;
 
-    /**
-     * @var LayoutInterface|MockObject
-     */
+    /** @var LayoutInterface|MockObject */
     protected $layoutMock;
 
-    /**
-     * @var Filesystem|MockObject
-     */
+    /** @var Filesystem|MockObject */
     protected $filesystemMock;
 
     protected function setUp(): void
     {
         $this->backendHelperMock = $this->getMockBuilder(Data::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMock();
 
         $this->jsonEncoderMock = $this->getMockBuilder(EncoderInterface::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMockForAbstractClass();
 
         $this->registryMock = $this->getMockBuilder(Registry::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMock();
 
         $this->roleFactoryMock = $this->getMockBuilder(RoleFactory::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['create'])
+            ->setMethods(['create'])
             ->getMock();
 
         $this->userRolesFactoryMock = $this
             ->getMockBuilder(CollectionFactory::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['create'])
+            ->setMethods(['create'])
             ->getMock();
 
         $this->requestInterfaceMock = $this->getMockBuilder(RequestInterface::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMockForAbstractClass();
 
         $this->urlInterfaceMock = $this->getMockBuilder(UrlInterface::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMockForAbstractClass();
 
         $this->layoutMock = $this->getMockBuilder(LayoutInterface::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMockForAbstractClass();
 
         $this->filesystemMock = $this->getMockBuilder(Filesystem::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMock();
 
         $objectManagerHelper = new ObjectManager($this);
@@ -140,10 +127,7 @@ class UserTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testGetGridUrlSuccessfulUrl(): void
+    public function testGetGridUrlSuccessfulUrl()
     {
         $roleId = 1;
         $url = 'http://Success';
@@ -154,20 +138,18 @@ class UserTest extends TestCase
         $this->assertEquals($url, $this->model->getGridUrl());
     }
 
-    /**
-     * @return void
-     */
-    public function testGetUsersPositiveNumberOfRolesAndJsonFalse(): void
+    public function testGetUsersPositiveNumberOfRolesAndJsonFalse()
     {
         $roleId = 1;
         $roles = ['role1', 'role2', 'role3'];
         /** @var Role|MockObject */
         $roleModelMock = $this->getMockBuilder(Role::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMock();
 
-        $this->requestInterfaceMock->method('getParam')
-            ->willReturnOnConsecutiveCalls('', $roleId);
+        $this->requestInterfaceMock->expects($this->at(0))->method('getParam')->willReturn("");
+        $this->requestInterfaceMock->expects($this->at(1))->method('getParam')->willReturn($roleId);
 
         $this->registryMock->expects($this->once())
             ->method('registry')
@@ -182,20 +164,18 @@ class UserTest extends TestCase
         $this->assertEquals($roles, $this->model->getUsers());
     }
 
-    /**
-     * @return void
-     */
-    public function testGetUsersPositiveNumberOfRolesAndJsonTrue(): void
+    public function testGetUsersPositiveNumberOfRolesAndJsonTrue()
     {
         $roleId = 1;
         $roles = ['role1', 'role2', 'role3'];
         /** @var Role|MockObject */
         $roleModelMock = $this->getMockBuilder(Role::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMock();
 
-        $this->requestInterfaceMock->method('getParam')
-            ->willReturnOnConsecutiveCalls('', $roleId);
+        $this->requestInterfaceMock->expects($this->at(0))->method('getParam')->willReturn("");
+        $this->requestInterfaceMock->expects($this->at(1))->method('getParam')->willReturn($roleId);
 
         $this->registryMock->expects($this->once())
             ->method('registry')
@@ -208,20 +188,18 @@ class UserTest extends TestCase
         $this->assertEquals($roles, $this->model->getUsers(true));
     }
 
-    /**
-     * @return void
-     */
-    public function testGetUsersNoRolesAndJsonFalse(): void
+    public function testGetUsersNoRolesAndJsonFalse()
     {
         $roleId = 1;
         $roles = [];
         /** @var Role|MockObject */
         $roleModelMock = $this->getMockBuilder(Role::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMock();
 
-        $this->requestInterfaceMock->method('getParam')
-            ->willReturnOnConsecutiveCalls('', $roleId);
+        $this->requestInterfaceMock->expects($this->at(0))->method('getParam')->willReturn("");
+        $this->requestInterfaceMock->expects($this->at(1))->method('getParam')->willReturn($roleId);
 
         $this->registryMock->expects($this->once())
             ->method('registry')
@@ -235,19 +213,16 @@ class UserTest extends TestCase
         $this->assertEquals($roles, $this->model->getUsers());
     }
 
-    /**
-    * @return void
-    */
-    public function testPrepareColumns(): void
+    public function testPrepareColumns()
     {
         $this->requestInterfaceMock->expects($this->any())->method('getParam')->willReturn(1);
         $layoutBlockMock = $this->getMockBuilder(LayoutInterface::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMockForAbstractClass();
         $blockMock = $this->getMockBuilder(AbstractBlock::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['setData', 'getLayout', 'getChildNames'])
-            ->addMethods(['setGrid', 'setId', 'isAvailable'])
+            ->setMethods(['setGrid', 'setId', 'setData', 'getLayout', 'getChildNames', 'isAvailable'])
             ->setMockClassName('mainblock')
             ->getMock();
         $blockMock->expects($this->any())->method('getLayout')->willReturn($layoutBlockMock);
@@ -263,6 +238,7 @@ class UserTest extends TestCase
         $layoutBlockMock->expects($this->any())->method('createBlock')->willReturn($blockMock);
         $directoryMock = $this->getMockBuilder(ReadInterface::class)
             ->disableOriginalConstructor()
+            ->setMethods([])
             ->getMockForAbstractClass();
         $this->filesystemMock->expects($this->any())->method('getDirectoryRead')->willReturn($directoryMock);
         $directoryMock->expects($this->any())->method('getRelativePath')->willReturn('filename');
@@ -280,10 +256,7 @@ class UserTest extends TestCase
         $this->model->toHtml();
     }
 
-    /**
-     * @return void
-     */
-    public function testGetUsersCorrectInRoleUser(): void
+    public function testGetUsersCorrectInRoleUser()
     {
         $param = 'in_role_user';
         $paramValue = '{"a":"role1","1":"role2","2":"role3"}';
@@ -292,10 +265,7 @@ class UserTest extends TestCase
         $this->assertEquals($paramValue, $this->model->getUsers(true));
     }
 
-    /**
-     * @return void
-     */
-    public function testGetUsersIncorrectInRoleUser(): void
+    public function testGetUsersIncorrectInRoleUser()
     {
         $param = 'in_role_user';
         $paramValue = 'not_JSON';
